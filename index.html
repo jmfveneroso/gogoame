@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Go Go Ame - Leveled Colors</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <button id="expand-controls-btn">&#x2699;</button>
+    <button id="pause-btn">&#x23F8;</button>
+
+    <div class="controls hidden"></div>
+
+    <div id="game-container">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <script src="script.js" type="module"></script>
+
+    <video
+      id="keep-alive-video"
+      loop
+      muted
+      playsinline
+      src="silent.mp4"
+    ></video>
+  </body>
+</html>

@@ -1,0 +1,340 @@
+html,
+body {
+  /* Prevents the "pull-to-refresh" action on mobile */
+  overscroll-behavior-y: contain;
+
+  /* This also helps prevent other unwanted default actions
+     like pinch-to-zoom on the entire page */
+  touch-action: none;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #333;
+  font-family: sans-serif;
+  color: #fff;
+}
+
+#gameCanvas {
+  display: block;
+  background-color: #444;
+  touch-action: none;
+}
+
+#game-container {
+  position: relative;
+}
+
+#ui {
+  position: absolute;
+  transform: scale(0.5);
+  right: -10px;
+  top: -25px;
+  font-size: 20px;
+  color: #333;
+  border-radius: 5px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#gameOverScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+  display: none; /* Hidden by default */
+  z-index: 20;
+}
+
+#gameOverScreen div:first-child {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+#gameOverScreen button {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin-top: 25px;
+  cursor: pointer;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+#gameOverScreen button:hover {
+  background-color: #777;
+}
+
+/* Add styles for the new expand button */
+#expand-controls-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  /* Make button bigger and center the icon */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 24px;
+  line-height: 30px; /* Helps vertical centering */
+  text-align: center;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#expand-controls-btn:hover {
+  background-color: #444;
+}
+
+/* Modify the .controls style to be a scrollable overlay */
+.controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 450px; /* A fixed width for the panel */
+  max-height: 90vh; /* Limit height to 90% of the viewport */
+  overflow-y: auto; /* This makes the panel scrollable */
+  padding: 20px;
+  padding-top: 50px; /* Extra padding at the top for the collapse button */
+  background-color: rgba(34, 34, 34, 0.95); /* Semi-transparent background */
+  border: 1px solid #555;
+  border-radius: 8px;
+  user-select: none;
+  z-index: 99;
+}
+
+/* Add style for the collapse button that will be inside the panel */
+#collapse-controls-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#collapse-controls-btn:hover {
+  background-color: #777;
+}
+
+/* A simple utility class to hide elements */
+.hidden {
+  display: none !important;
+}
+
+.controls .ctrl-line {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.controls label {
+  display: inline-block;
+  min-width: 180px;
+  font-size: 0.9em;
+}
+
+.controls input[type="range"] {
+  width: 200px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.controls span {
+  display: inline-block;
+  min-width: 50px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+@media screen and (max-width: 600px) {
+  /* Make the panel a full-screen overlay on narrow screens */
+  .controls {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    top: 0;
+    left: 0;
+    border-radius: 0;
+    box-sizing: border-box; /* Ensures padding is included in the 100% width/height */
+  }
+
+  /* Make the collapse button a bit bigger for easier tapping */
+  #collapse-controls-btn {
+    padding: 10px 15px;
+    font-size: 16px;
+  }
+
+  /* Stack the label on top of the slider for better readability */
+  .controls div {
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    gap: 8px; /* Add some space between label and slider */
+  }
+
+  .controls label {
+    min-width: 0; /* Allow label to be its natural width */
+  }
+
+  /* Make the slider take up more width */
+  .controls input[type="range"] {
+    width: 90%;
+  }
+
+  /* Align the value display to the left */
+  .controls span {
+    text-align: left;
+    min-width: 0;
+    padding-left: 5px;
+  }
+}
+
+#score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: bold;
+}
+
+#highestScoreDisplay {
+  font-size: 28px;
+  font-weight: bold;
+  /* Add a transition for smooth scaling and color changes */
+  transition:
+    transform 0.2s ease-out,
+    color 0.2s ease-out;
+}
+
+#scoreDisplay {
+  font-size: 20px;
+  opacity: 0.8;
+  margin: 0 auto;
+}
+
+#timerDisplay {
+  font-size: 16px;
+  opacity: 0.7;
+  margin-top: 10px;
+  color: #55aa55;
+  border-radius: 25px;
+  border: 1px solid #55aa55;
+  padding: 5px 10px;
+}
+
+/* Style for the new Pause button */
+#pause-btn {
+  position: absolute;
+  top: 10px;
+  left: 50px; /* Position it next to the config button */
+  z-index: 100;
+  /* Make button bigger and center the icon */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 18px; /* Pause/Play icons are slightly different sizes */
+  line-height: 30px;
+  text-align: center;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#pause-btn:hover {
+  background-color: #444;
+}
+
+/* Style for the text that will appear when the game is paused */
+#pause-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  z-index: 150;
+  pointer-events: none; /* Make sure it doesn't block clicks */
+}
+
+/* Add this rule to hide the keep-alive video */
+#keep-alive-video {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.spawner-container {
+  border-top: 2px solid #555;
+  margin-top: 25px;
+  padding: 20px 140px;
+}
+
+.spawner-container h3 {
+  margin-top: 0;
+  color: #ccc;
+  text-align: center;
+}
+
+/* This is the new grid container for the mandala buttons */
+.spawner-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Creates a 3-column grid */
+  gap: 10px;
+}
+
+/* Style for the buttons that will contain the canvases */
+.spawner-btn {
+  padding: 2px; /* A small padding around the canvas */
+  background-color: #555;
+  border: 1px solid #777;
+  border-radius: 4px;
+  cursor: pointer;
+  aspect-ratio: 1 / 1; /* Make the button a perfect square */
+}
+.spawner-btn:hover {
+  background-color: #666;
+  border-color: #999;
+}
+
+/* Ensure the canvas inside the button fills it completely */
+.spawner-btn canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.debug-btn {
+  width: 90%;
+  padding: 10px;
+  margin: 10px auto;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #3498db; /* A distinct blue color */
+  border: 1px solid #2980b9;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.debug-btn:hover {
+  background-color: #2980b9;
+}
