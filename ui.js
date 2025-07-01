@@ -27,6 +27,7 @@ const rangeFactor = 10;
 
 const configurableParams = [
   ["gravity", 0.05],
+  ["friction", 0.005],
   ["baseBallRadius", 1],
   ["ballCreationInterval", 100],
   ["enableSlingshot", "toggle"],
